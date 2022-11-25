@@ -1,6 +1,8 @@
 import { Button, TextField, Box, Card, CardContent, Typography } from '@mui/material'
 import React from 'react';
+import { createAPIEndpoint, ENDPOINTS } from '../api';
 import useForm from '../hooks/useForm'
+import useStateContext from '../hooks/useStateContext';
 import Center from './Center'
 
 interface Temp {
@@ -14,16 +16,25 @@ const getFreshModel = () => ({
 
 export default function Login() {
 
+  const { context, setContext } = useStateContext();
+
   const { values,
     setValues,
     errors,
     setErrors,
-    handleInputChange } = useForm({getFreshModel});
+    handleInputChange 
+  } = useForm({getFreshModel});
 
   const Login = (e: React.FormEvent) => {
     e.preventDefault();
     if(validate()){
-      console.log("hi")
+      createAPIEndpoint(ENDPOINTS.participant)
+        .post(values)
+        .then(res => {
+          setContext({ participantId: res.data.id })
+          console.log(context)
+        })
+        .catch(err => console.log(err))
     }
   }
 
@@ -35,6 +46,7 @@ export default function Login() {
     setErrors(temp)
     return Object.values(temp).every(item => item === "");
   }
+
   return (
     <Center>
       <Card sx={{width: 400}}>
@@ -48,7 +60,8 @@ export default function Login() {
               width:'90%',
             }
           }}>
-            <form onSubmit={Login}>
+            {context.participantId}
+            <form autoComplete="on" onSubmit={Login}>
               <TextField
                 label="Email"
                 name="email"
