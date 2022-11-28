@@ -1,11 +1,12 @@
 import { Button, TextField, Box, Card, CardContent, Typography } from '@mui/material'
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../api';
 import useForm from '../hooks/useForm'
 import useStateContext from '../hooks/useStateContext';
 import Center from './Center'
 
-interface Temp {
+interface Error {
   [key:string]: string;
 }
 
@@ -17,14 +18,25 @@ const getFreshModel = () => ({
 export default function Login() {
 
   const { context, setContext } = useStateContext();
-
-  const { values,
+  const navigate = useNavigate();
+  const { 
+    values,
     setValues,
     errors,
     setErrors,
     handleInputChange 
   } = useForm({getFreshModel});
 
+  
+  const validate = ():Boolean => {
+    let error: Error= {};
+    let emailRegex = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "i");
+    error.email = emailRegex.test(values.email)? "" : "Email is not valid."
+    error.name = values.name !== "" ? "" : "This field is required."
+    setErrors(error)
+    return Object.values(error).every(item => item === "");
+  }
+  
   const Login = (e: React.FormEvent) => {
     e.preventDefault();
     if(validate()){
@@ -32,19 +44,11 @@ export default function Login() {
         .post(values)
         .then(res => {
           setContext({ participantId: res.data.id })
-          console.log(context)
+          navigate("/quiz")
+          // console.log(context);
         })
         .catch(err => console.log(err))
     }
-  }
-
-  const validate = ():Boolean => {
-    let temp: Temp= {};
-    let emailRegex = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "i");
-    temp.email = emailRegex.test(values.email)? "" : "Email is not valid."
-    temp.name = values.name !== "" ? "" : "This field is required."
-    setErrors(temp)
-    return Object.values(temp).every(item => item === "");
   }
 
   return (

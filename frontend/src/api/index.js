@@ -1,4 +1,4 @@
-import axios  from "axios";
+import axios from "axios";
 
 export const BASE_URL = "https://localhost:7220/";
 

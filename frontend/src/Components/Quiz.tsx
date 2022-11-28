@@ -1,14 +1,11 @@
 import React, { useContext } from 'react'
 import useStateContext, { stateContext } from '../hooks/useStateContext'
 
-export default function Question() { 
-  // const { context, setContext } = useContext(stateContext)
+export default function Quiz() { 
 
-  // setContext({
-  //   ...context,
-  //   timeTaken:1,
-  // })
     const { context, setContext } = useStateContext();
+
+    console.log(context);
     // setContext({ timeTaken:1 });
   return (
     <div>Question</div>

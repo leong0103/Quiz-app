@@ -20,7 +20,8 @@ export default function useForm( {getFreshModel} :IGetFreshModelObject) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setValues({
-      ...values, [name]: value
+      ...values,
+      [name]: value
     })
   }
 
