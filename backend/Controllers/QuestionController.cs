@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Models;
+using backend.Helper;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers;
@@ -18,7 +19,17 @@ public class QuestionController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Question>>> GetQuestion()
     {
-        return await _context.Question.ToListAsync();
+        var randomFiveQuestion = await(_context.Question
+        .Select(question => new {
+            Id = question.Id,
+            QuestionDetails = question.QuestionDetails,
+            ImageURL = question.ImageURL,
+            Options = new string[] {question.Option1, question.Option2, question.Option3, question.Option4}
+        })
+        .Take(5))
+        .ToListAsync();
+        randomFiveQuestion.Shuffle();
+        return Ok(randomFiveQuestion);
     }
 
     [HttpGet("{id}")]
