@@ -22,11 +22,11 @@ public class ParticipantController : ControllerBase
         var temp = _context.Participants
             .Where(p => p.Name == participant.Name && p.Email == participant.Email)
             .FirstOrDefault();
-        if(temp == null)
+        if (temp == null)
         {
             _context.Participants.Add(participant);
             await _context.SaveChangesAsync();
-        } 
+        }
         else
         {
             participant = temp;
@@ -38,7 +38,7 @@ public class ParticipantController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> SaveParticipantResult(int id, ParticipantResultRequest participantResultRequest)
     {
-        if(id != participantResultRequest.Id)
+        if (id != participantResultRequest.Id)
         {
             return BadRequest();
         }

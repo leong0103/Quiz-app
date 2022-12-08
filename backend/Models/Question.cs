@@ -25,5 +25,5 @@ namespace backend.Models
         public string? Option4 { get; set; }
 
         public int Answer { get; set; }
-    }   
+    }
 }
