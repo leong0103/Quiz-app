@@ -58,7 +58,7 @@ export default function Result() {
           })
           .catch((err) => console.log(err));
       });
-  }, []);
+  }, [context.selectedOptions]);
 
   const calculateScore = (questionAnswers: QuestionAnswers[]) => {
     let tempScore: number = questionAnswers.reduce((acc, curr) => {
