@@ -54,7 +54,6 @@ export default function Result() {
 
         Promise.all(promises)
           .then((res) => {
-            console.log(res);
             setQuestionAnswers(res);
             setScore(calculateScore(res));
           })
