@@ -5,9 +5,9 @@ interface ContextProviderProp {
 }
 
 interface ContextItem {
-  participantId?: number | undefined;
-  timeTaken?: number | undefined;
-  selectedOptions?: number[] | undefined;
+  participantId?: number;
+  timeTaken?: number;
+  selectedOptions?: SelectedOption[];
 }
 
 interface ContextValue {
@@ -15,11 +15,16 @@ interface ContextValue {
   setContext: Dispatch<SetStateAction<ContextItem>>;
 }
 
+export interface SelectedOption {
+  questionId: number;
+  selectedIndex: number;
+}
+
 const defaultValue: ContextValue = {
   context: { 
     participantId: 0, 
     timeTaken: 0, 
-    selectedOptions: new Array<number>()
+    selectedOptions: new Array<SelectedOption>()
   },
   setContext: context => {}
 };
@@ -36,12 +41,15 @@ function getDefaltContext() {
 export const stateContext = createContext(defaultValue);
 
 export default function useStateContext() {
-
   const { context, setContext } = useContext(stateContext)
 
   return { 
     context,
-    setContext: (item:ContextItem) => { setContext({...context, ...item})}
+    setContext: (item:ContextItem) => { setContext({...context, ...item})},
+    resetContext: () => {
+      localStorage.removeItem('context')
+      setContext(getDefaltContext())
+    }
   }
 }
 

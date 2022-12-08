@@ -1,5 +1,5 @@
 import { Button, TextField, Box, Card, CardContent, Typography } from '@mui/material'
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createAPIEndpoint, ENDPOINTS } from '../api';
 import useForm from '../hooks/useForm'
@@ -17,7 +17,7 @@ const getFreshModel = () => ({
 
 export default function Login() {
 
-  const { context, setContext } = useStateContext();
+  const { context, setContext, resetContext} = useStateContext();
   const navigate = useNavigate();
   const { 
     values,
@@ -27,6 +27,9 @@ export default function Login() {
     handleInputChange 
   } = useForm({getFreshModel});
 
+  useEffect(() => {
+    resetContext()
+  })
   
   const validate = ():Boolean => {
     let error: Error= {};

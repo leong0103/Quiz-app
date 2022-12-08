@@ -1,82 +1,125 @@
-import { Card, CardContent, CardHeader, List, ListItemButton, Typography } from '@mui/material';
-import { time } from 'console';
-import React, { useContext, useEffect, useState } from 'react'
-import { createAPIEndpoint, ENDPOINTS } from '../api';
-import useStateContext, { stateContext } from '../hooks/useStateContext'
-import Center from './Center';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  LinearProgress,
+  List,
+  ListItemButton,
+  Typography,
+} from "@mui/material";
+import { time } from "console";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { createAPIEndpoint, ENDPOINTS } from "../api";
+import { getFormatedTime } from "../helper";
+import useStateContext, {
+  SelectedOption,
+  stateContext,
+} from "../hooks/useStateContext";
 
 interface QuestionResponse {
   id: number;
   imageURL: string;
   options: string[];
-  questionDetails: string
+  questionDetails: string;
 }
 
+export default function Quiz() {
+  const navigate = useNavigate();
+  const { context, setContext, resetContext } = useStateContext();
+  const [question, setQuestion] = useState<QuestionResponse[]>([]);
+  const [questionIndex, setQuestionIndex] = useState<number>(0);
+  const [timeTaken, setTimeTaken] = useState<number>(0);
 
-export default function Quiz() { 
+  let timer = setInterval(() => {});
+  const startTimer = () => {
+    timer = setInterval(() => {
+      //cant use setTimeTake(timeTaken + 1)
+      //Because setTimeTake is a Async function
+      setTimeTaken((prev) => prev + 1);
+      // console.log(timeTaken);
+    }, 1500);
+  };
 
-    const { context, setContext } = useStateContext();
-    const [ question, setQuestion ] = useState<QuestionResponse[]>([]);
-    const [ questionIndex, setQuestionIndex ] = useState<number>(0);
-    const [ timeTaken, setTimeTaken ] = useState<number>(0);
-    
-    let timer = setInterval(() => {});
+  useEffect(() => {
+    resetContext()
+  })
 
-    const startTimer = () => {
-      timer = setInterval(() => {
-        //cant use setTimeTake(timeTaken + 1)
-        //Because setTimeTake is a Async function
-        setTimeTaken(prev => prev + 10)
-        // console.log(timeTaken);
-      }, 1000);
-    }
-    
-    useEffect(()=> {
-      createAPIEndpoint(ENDPOINTS.question)
+  useEffect(() => {
+    setContext({
+      timeTaken: 0,
+      selectedOptions: new Array<SelectedOption>(),
+    });
+    createAPIEndpoint(ENDPOINTS.question)
       .fetch()
-      .then(res => {
+      .then((res) => {
         setQuestion(res.data);
         startTimer();
       })
-      .catch(err => { console.log(err); })
+      .catch((err) => {
+        console.log(err);
+      });
 
-      return () => clearInterval(timer);
-    }, [])
+    return () => clearInterval(timer);
+  }, []);
 
-    useEffect(() => {
-      console.log(timeTaken);
-    }, [timeTaken])
+  const updateAnswer = (questionId: number, optionIndex: number) => {
+    if (context.selectedOptions) {
+      let temp = [...context.selectedOptions];
+      // console.log(temp)
+      temp.push({
+        questionId,
+        selectedIndex: optionIndex,
+      });
+      // console.log("update context")
+      if (questionIndex < 4) {
+        setContext({ selectedOptions: [...temp] });
+        setQuestionIndex(questionIndex + 1);
+        console.log("update question Index");
+      } else {
+        setContext({ selectedOptions: [...temp], timeTaken });
+        navigate("/result");
+      }
+    }
+  };
 
   return (
     <>
-    {question.length !== 0 ? 
-      <Card 
-        sx={{ maxWidth: 640, mx: 'auto', mt: 5}} >
-        <CardHeader 
-          title={'Question ' + (questionIndex + 1) + ' of 5'}
-          action={<Typography>{timeTaken}</Typography>}
+      {question.length !== 0 ? (
+        <Card sx={{ maxWidth: 640, mx: "auto", mt: 10 }}>
+          <CardHeader
+            title={"Question " + (questionIndex + 1) + " of 5"}
+            action={<Typography>{getFormatedTime(timeTaken)}</Typography>}
           />
-        <CardContent>
-            <Typography variant='h6'>
-              
+          <Box>
+            <LinearProgress
+              variant="determinate"
+              value={((questionIndex + 1) * 100) / 5}
+            />
+          </Box>
+          <CardContent>
+            <Typography variant="h6">
               {question[questionIndex].questionDetails}
             </Typography>
             <List>
-              {question[questionIndex].options.map((item, index) => 
-                <ListItemButton 
+              {question[questionIndex].options.map((item, index) => (
+                <ListItemButton
                   key={index}
-                  disableRipple
-                  >
-                    <div>
-                      <b>{String.fromCharCode(65 + index) + ' . '}</b>{item}
-                    </div>
+                  onClick={() =>
+                    updateAnswer(question[questionIndex].id, index)
+                  }
+                >
+                  <div>
+                    <b>{String.fromCharCode(65 + index) + " . "}</b>
+                    {item}
+                  </div>
                 </ListItemButton>
-              )}
+              ))}
             </List>
-        </CardContent>
-      </Card>
-    :
-      null}
+          </CardContent>
+        </Card>
+      ) : null}
     </>
-  )
+  );
 }
