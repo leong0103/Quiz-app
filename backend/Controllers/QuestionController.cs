@@ -63,32 +63,4 @@ public class QuestionController : ControllerBase
 
         return question;
     }
-
-    [HttpPut("{id}")]
-    public async Task<IActionResult> SaveParticipantResult(int id, ParticipantResultRequest participantResultRequest)
-    {
-        if(id != participantResultRequest.Id)
-        {
-            return BadRequest();
-        }
-
-        Participant participant = _context.Participants.Find(id) ?? throw new ArgumentException("No this participant, Please Log In Again");
-        participant.Score = participantResultRequest.Score;
-        participant.TimeTaken = participantResultRequest.TimeTaken;
-
-        _context.Entry(participant).State = EntityState.Modified;
-
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            return NotFound();
-        }
-
-        return NoContent();
-    }
-
-
 }

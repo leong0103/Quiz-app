@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -11,29 +12,33 @@ import { useNavigate } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../api";
 import { getFormatedTime } from "../helper";
 import useStateContext, { SelectedOption } from "../hooks/useStateContext";
+import { green } from "@mui/material/colors";
+import Answer from "./Answer";
+
+interface AnsResponse {
+  questionId: number;
+  imageURL: string;
+  options: string[];
+  questionDetails: string;
+  answer: number;
+}
+
+export interface QuestionAnswers {
+  questionId: number;
+  imageURL: string;
+  options: string[];
+  questionDetails: string;
+  answer: number;
+  selectedIndex: number;
+}
 
 export default function Result() {
   const { context, setContext } = useStateContext();
-  const [score, setScore] = useState(0);
-  const [questionAnswers, setQuestionAnswers] = useState<QuestionAns[]>([]);
+  const [score, setScore] = useState<number>(0);
+  const [questionAnswers, setQuestionAnswers] = useState<QuestionAnswers[]>([]);
+  const [isSubmitSuccess, setIsSubmitSuccess] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  interface AnsResponse {
-    questionId: number;
-    imageURL: string;
-    options: string[];
-    questionDetails: string;
-    answer: number;
-  }
-
-  interface QuestionAns {
-    questionId: number;
-    imageURL: string;
-    options: string[];
-    questionDetails: string;
-    answer: number;
-    selectedIndex: number;
-  }
 
   useEffect(() => {
     const ids = context.selectedOptions.map((item) => item.questionId);
@@ -57,7 +62,7 @@ export default function Result() {
       });
   }, []);
 
-  const calculateScore = (questionAnswers: QuestionAns[]) => {
+  const calculateScore = (questionAnswers: QuestionAnswers[]) => {
     let tempScore: number = questionAnswers.reduce((acc, curr) => {
       return curr.answer === curr.selectedIndex ? acc + 1 : acc;
     }, 0);
@@ -73,32 +78,77 @@ export default function Result() {
     navigate("/quiz");
   };
 
+  const sumitResult = () => {
+    createAPIEndpoint(ENDPOINTS.participant)
+      .put(context.participantId, {
+        id: context.participantId,
+        timeTaken: context.timeTaken,
+        score: score,
+      })
+      .then((res) => {
+        setIsSubmitSuccess(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
-    <Card
-      sx={{ mt: 5, display: "flex", width: "100%", maxWidth: 640, mx: "auto" }}
-    >
-      <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
-        <CardContent sx={{ flex: "1 0 auto", textAlign: "center" }}>
-          <Typography variant="h4">Congratulations!</Typography>
-          <Typography variant="h6">YOUR SCORE</Typography>
-          <Typography variant="h5">{score} / 5</Typography>
-          <Typography variant="h6">
-            Took {getFormatedTime(context.timeTaken) + " mins"}
-          </Typography>
-          <Button variant="contained" sx={{ mx: 1 }} size="small">
-            Submit
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ mx: 1 }}
-            size="small"
-            onClick={restart}
-          >
-            Re-try
-          </Button>
-        </CardContent>
-        <CardMedia component="img" sx={{ width: 220 }} image="" />
-      </Box>
-    </Card>
+    <>
+      <Card
+        sx={{
+          mt: 5,
+          display: "flex",
+          width: "100%",
+          maxWidth: 640,
+          mx: "auto",
+        }}
+      >
+        <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+          <CardContent sx={{ flex: "1 0 auto", textAlign: "center" }}>
+            <Typography variant="h4">Congratulations!</Typography>
+            <Typography variant="h6">YOUR SCORE</Typography>
+            <Typography variant="h5">
+              <Typography component="span" variant="h5" color={green[500]}>
+                {score}
+              </Typography>{" "}
+              / {context.selectedOptions.length}
+            </Typography>
+            <Typography variant="h6">
+              Took {getFormatedTime(context.timeTaken) + " mins"}
+            </Typography>
+            <Button
+              variant="contained"
+              sx={{ mx: 1, mb: 2 }}
+              size="small"
+              onClick={sumitResult}
+            >
+              Submit
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ mx: 1, mb: 2 }}
+              size="small"
+              onClick={restart}
+            >
+              Re-try
+            </Button>
+            <Alert
+              severity="success"
+              variant="outlined"
+              sx={{
+                width: "60%",
+                m: "auto",
+                visibility: isSubmitSuccess ? "visible" : "hidden",
+              }}
+            >
+              Score Updated.
+            </Alert>
+          </CardContent>
+          <CardMedia component="img" sx={{ width: 220 }} image="" />
+        </Box>
+      </Card>
+      <Answer questionAnswers={questionAnswers} />
+    </>
   );
 }
