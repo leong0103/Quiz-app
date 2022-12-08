@@ -5,9 +5,9 @@ interface ContextProviderProp {
 }
 
 interface ContextItem {
-  participantId?: number;
-  timeTaken?: number;
-  selectedOptions?: SelectedOption[];
+  participantId: number;
+  timeTaken: number;
+  selectedOptions: SelectedOption[];
 }
 
 interface ContextValue {
@@ -22,9 +22,9 @@ export interface SelectedOption {
 
 const defaultValue: ContextValue = {
   context: { 
-    participantId: 0, 
     timeTaken: 0, 
-    selectedOptions: new Array<SelectedOption>()
+    selectedOptions: new Array<SelectedOption>(),
+    participantId: 0 ,
   },
   setContext: context => {}
 };
@@ -37,7 +37,6 @@ function getDefaltContext() {
   return JSON.parse(localStorage.getItem("context")!)
 }
 
-
 export const stateContext = createContext(defaultValue);
 
 export default function useStateContext() {
@@ -45,7 +44,10 @@ export default function useStateContext() {
 
   return { 
     context,
-    setContext: (item:ContextItem) => { setContext({...context, ...item})},
+    setContext: (item:ContextItem) => { 
+      // console.log(item);
+      setContext({...context, ...item})
+    },
     resetContext: () => {
       localStorage.removeItem('context')
       setContext(getDefaltContext())
@@ -60,6 +62,7 @@ export function ContextProvider({ children }: ContextProviderProp) {
 
   useEffect(()=>{
     localStorage.setItem("context", JSON.stringify({...context}))
+    // console.log(context)
   }, [context])
   
   return (

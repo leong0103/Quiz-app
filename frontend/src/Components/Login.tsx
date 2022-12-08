@@ -29,7 +29,7 @@ export default function Login() {
 
   useEffect(() => {
     resetContext()
-  })
+  }, [])
   
   const validate = ():Boolean => {
     let error: Error= {};
@@ -46,7 +46,7 @@ export default function Login() {
       createAPIEndpoint(ENDPOINTS.participant)
         .post(values)
         .then(res => {
-          setContext({ participantId: res.data.id })
+          setContext({...context, participantId: res.data.id})
           navigate("/quiz")
           // console.log(context);
         })

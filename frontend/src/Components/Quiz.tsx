@@ -19,7 +19,7 @@ import useStateContext, {
 } from "../hooks/useStateContext";
 
 interface QuestionResponse {
-  id: number;
+  questionId: number;
   imageURL: string;
   options: string[];
   questionDetails: string;
@@ -43,11 +43,12 @@ export default function Quiz() {
   };
 
   useEffect(() => {
-    resetContext()
-  })
+    resetContext();
+  }, []);
 
   useEffect(() => {
     setContext({
+      ...context,
       timeTaken: 0,
       selectedOptions: new Array<SelectedOption>(),
     });
@@ -74,11 +75,15 @@ export default function Quiz() {
       });
       // console.log("update context")
       if (questionIndex < 4) {
-        setContext({ selectedOptions: [...temp] });
+        setContext({ ...context, selectedOptions: [...temp] });
         setQuestionIndex(questionIndex + 1);
         console.log("update question Index");
       } else {
-        setContext({ selectedOptions: [...temp], timeTaken });
+        setContext({
+          ...context,
+          selectedOptions: [...temp],
+          timeTaken: timeTaken,
+        });
         navigate("/result");
       }
     }
@@ -107,7 +112,7 @@ export default function Quiz() {
                 <ListItemButton
                   key={index}
                   onClick={() =>
-                    updateAnswer(question[questionIndex].id, index)
+                    updateAnswer(question[questionIndex].questionId, index)
                   }
                 >
                   <div>
