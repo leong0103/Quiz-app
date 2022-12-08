@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using backend.Models;
 using backend.Helper;
 using Microsoft.EntityFrameworkCore;
+using backend.Models.Request;
 
 namespace backend.Controllers;
 
@@ -25,7 +26,7 @@ public class QuestionController : ControllerBase
             QuestionId = question.Id,
             QuestionDetails = question.QuestionDetails,
             ImageURL = question.ImageURL,
-            Options = new string[] { question.Option1, question.Option2, question.Option3, question.Option4 }
+            Options = new string[] { question.Option1!, question.Option2!, question.Option3!, question.Option4! }
         })
         .Take(5))
         .ToListAsync();
@@ -44,7 +45,7 @@ public class QuestionController : ControllerBase
                 QuestionId = y.Id,
                 QuestionDetails = y.QuestionDetails,
                 ImageURL = y.ImageURL,
-                Options = new string[] { y.Option1, y.Option2, y.Option3, y.Option4 },
+                Options = new string[] { y.Option1!, y.Option2!, y.Option3!, y.Option4! },
                 Answer = y.Answer
             })).ToListAsync();
         return Ok(answers);
@@ -61,6 +62,32 @@ public class QuestionController : ControllerBase
         }
 
         return question;
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> SaveParticipantResult(int id, ParticipantResultRequest participantResultRequest)
+    {
+        if(id != participantResultRequest.Id)
+        {
+            return BadRequest();
+        }
+
+        Participant participant = _context.Participants.Find(id) ?? throw new ArgumentException("No this participant, Please Log In Again");
+        participant.Score = participantResultRequest.Score;
+        participant.TimeTaken = participantResultRequest.TimeTaken;
+
+        _context.Entry(participant).State = EntityState.Modified;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
     }
 
 

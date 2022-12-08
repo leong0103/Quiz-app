@@ -17,3 +17,4 @@ namespace backend.Models
         public int TimeTaken { get; set; }
     }
 }
+
