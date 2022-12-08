@@ -1,12 +1,22 @@
-import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../api";
-import useStateContext from "../hooks/useStateContext";
+import { getFormatedTime } from "../helper";
+import useStateContext, { SelectedOption } from "../hooks/useStateContext";
 
 export default function Result() {
   const { context, setContext } = useStateContext();
   const [score, setScore] = useState(0);
   const [questionAnswers, setQuestionAnswers] = useState<QuestionAns[]>([]);
+  const navigate = useNavigate();
 
   interface AnsResponse {
     questionId: number;
@@ -27,14 +37,12 @@ export default function Result() {
 
   useEffect(() => {
     const ids = context.selectedOptions.map((item) => item.questionId);
-    // console.log(ids)
     createAPIEndpoint(ENDPOINTS.getAnswers)
       .post(ids)
       .then((res) => {
         const ans: AnsResponse[] = res.data;
-        // console.log(ans);
-        //map and find is async method
-        const promises = context.selectedOptions.map(async (x) => ({
+        //map and find is async method, Promise all for resolve all promise
+        const promises = context.selectedOptions.map((x) => ({
           ...x,
           ...ans.find((y) => y.questionId === x.questionId)!,
         }));
@@ -43,14 +51,9 @@ export default function Result() {
           .then((res) => {
             console.log(res);
             setQuestionAnswers(res);
-            // calculateScore(res);
             setScore(calculateScore(res));
           })
           .catch((err) => console.log(err));
-
-        // console.log(questionAnswers);
-
-        // console.log(res.data)
       });
   }, []);
 
@@ -61,6 +64,15 @@ export default function Result() {
     return tempScore;
   };
 
+  const restart = () => {
+    setContext({
+      ...context,
+      timeTaken: 0,
+      selectedOptions: new Array<SelectedOption>(),
+    });
+    navigate("/quiz");
+  };
+
   return (
     <Card
       sx={{ mt: 5, display: "flex", width: "100%", maxWidth: 640, mx: "auto" }}
@@ -69,9 +81,21 @@ export default function Result() {
         <CardContent sx={{ flex: "1 0 auto", textAlign: "center" }}>
           <Typography variant="h4">Congratulations!</Typography>
           <Typography variant="h6">YOUR SCORE</Typography>
-          <Typography variant="h5">
-            {score} / 5
+          <Typography variant="h5">{score} / 5</Typography>
+          <Typography variant="h6">
+            Took {getFormatedTime(context.timeTaken) + " mins"}
           </Typography>
+          <Button variant="contained" sx={{ mx: 1 }} size="small">
+            Submit
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ mx: 1 }}
+            size="small"
+            onClick={restart}
+          >
+            Re-try
+          </Button>
         </CardContent>
         <CardMedia component="img" sx={{ width: 220 }} image="" />
       </Box>
