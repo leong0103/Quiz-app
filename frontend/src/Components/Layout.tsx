@@ -1,5 +1,4 @@
 import { AppBar, Button, Container, Toolbar, Typography } from "@mui/material";
-import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import useStateContext from "../hooks/useStateContext";
 

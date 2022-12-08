@@ -8,15 +8,11 @@ import {
   ListItemButton,
   Typography,
 } from "@mui/material";
-import { time } from "console";
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../api";
 import { getFormatedTime } from "../helper";
-import useStateContext, {
-  SelectedOption,
-  stateContext,
-} from "../hooks/useStateContext";
+import useStateContext, { SelectedOption } from "../hooks/useStateContext";
 
 interface QuestionResponse {
   questionId: number;
@@ -38,7 +34,6 @@ export default function Quiz() {
       //cant use setTimeTake(timeTaken + 1)
       //Because setTimeTake is a Async function
       setTimeTaken((prev) => prev + 1);
-      // console.log(timeTaken);
     }, 1500);
   };
 
@@ -68,12 +63,10 @@ export default function Quiz() {
   const updateAnswer = (questionId: number, optionIndex: number) => {
     if (context.selectedOptions) {
       let temp = [...context.selectedOptions];
-      // console.log(temp)
       temp.push({
         questionId,
         selectedIndex: optionIndex,
       });
-      // console.log("update context")
       if (questionIndex < 4) {
         setContext({ ...context, selectedOptions: [...temp] });
         setQuestionIndex(questionIndex + 1);

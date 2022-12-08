@@ -5,10 +5,9 @@ import {
   Box,
   List,
   ListItem,
-  ListItemButton,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import { QuestionAnswers } from "./Result";
 import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
 import { green, red, grey } from "@mui/material/colors";

@@ -1,4 +1,11 @@
-import React, { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface ContextProviderProp {
   children?: React.ReactNode;
@@ -21,52 +28,50 @@ export interface SelectedOption {
 }
 
 const defaultValue: ContextValue = {
-  context: { 
-    timeTaken: 0, 
+  context: {
+    timeTaken: 0,
     selectedOptions: new Array<SelectedOption>(),
-    participantId: 0 ,
+    participantId: 0,
   },
-  setContext: context => {}
+  setContext: (context) => {},
 };
 
 function getDefaltContext() {
-  // localStorage.removeItem("context")
-  if(localStorage.getItem("context") === null){
-    localStorage.setItem("context", JSON.stringify({ ...defaultValue.context }))
+  if (localStorage.getItem("context") === null) {
+    localStorage.setItem(
+      "context",
+      JSON.stringify({ ...defaultValue.context })
+    );
   }
-  return JSON.parse(localStorage.getItem("context")!)
+  return JSON.parse(localStorage.getItem("context")!);
 }
 
 export const stateContext = createContext(defaultValue);
 
 export default function useStateContext() {
-  const { context, setContext } = useContext(stateContext)
+  const { context, setContext } = useContext(stateContext);
 
-  return { 
+  return {
     context,
-    setContext: (item:ContextItem) => { 
-      // console.log(item);
-      setContext({...context, ...item})
+    setContext: (item: ContextItem) => {
+      setContext({ ...context, ...item });
     },
     resetContext: () => {
-      localStorage.removeItem('context')
-      setContext(getDefaltContext())
-    }
-  }
+      localStorage.removeItem("context");
+      setContext(getDefaltContext());
+    },
+  };
 }
 
 export function ContextProvider({ children }: ContextProviderProp) {
-  
   const [context, setContext] = useState(getDefaltContext());
-  // console.log(localStorage.getItem("context"))
 
-  useEffect(()=>{
-    localStorage.setItem("context", JSON.stringify({...context}))
-    // console.log(context)
-  }, [context])
-  
+  useEffect(() => {
+    localStorage.setItem("context", JSON.stringify({ ...context }));
+  }, [context]);
+
   return (
-    <stateContext.Provider value={{context, setContext}}>
+    <stateContext.Provider value={{ context, setContext }}>
       {children}
     </stateContext.Provider>
   );

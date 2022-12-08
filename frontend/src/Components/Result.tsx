@@ -39,7 +39,6 @@ export default function Result() {
   const [isSubmitSuccess, setIsSubmitSuccess] = useState<boolean>(false);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     const ids = context.selectedOptions.map((item) => item.questionId);
     createAPIEndpoint(ENDPOINTS.getAnswers)
