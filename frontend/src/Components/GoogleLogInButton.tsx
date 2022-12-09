@@ -1,10 +1,9 @@
 import { gapi } from "gapi-script";
 import React, { useEffect } from "react";
-import GoogleLogin, { useGoogleLogin } from "react-google-login";
+import GoogleLogin from "react-google-login";
 import { useNavigate } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../api";
 import useStateContext from "../hooks/useStateContext";
-import { refreshTokenSetup } from "../utils/refreshToken";
 
 const clientId =
   "982099827840-dgf14s3u4u9dkon3idokciabcfqbkoma.apps.googleusercontent.com";

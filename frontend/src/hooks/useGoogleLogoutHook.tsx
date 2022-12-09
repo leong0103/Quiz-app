@@ -1,5 +1,4 @@
-import React from "react";
-import { useGoogleLogin, useGoogleLogout } from "react-google-login";
+import { useGoogleLogout } from "react-google-login";
 import { useNavigate } from "react-router-dom";
 
 const clientId =
@@ -9,7 +8,6 @@ export default function useGoogleLogoutHooks() {
   const navigate = useNavigate();
 
   const onLogoutSuccess = () => {
-    console.log("Logged out Success");
     navigate("/");
   };
 

@@ -12,9 +12,6 @@ import { createAPIEndpoint, ENDPOINTS } from "../api";
 import useForm from "../hooks/useForm";
 import useStateContext from "../hooks/useStateContext";
 import Center from "../Components/Center";
-import { GoogleLogin } from "react-google-login";
-import { gapi } from "gapi-script";
-import LoginHooks from "../Components/GoogleLogInButton";
 import GoogleLogInButton from "../Components/GoogleLogInButton";
 
 interface Error {

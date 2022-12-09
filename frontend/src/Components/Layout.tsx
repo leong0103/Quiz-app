@@ -1,7 +1,6 @@
 import { AppBar, Button, Container, Toolbar, Typography } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
-import useGoogleLogoutHooks from "../hooks/useGoogleLogoutHooks";
-import LogoutHooks from "../hooks/useGoogleLogoutHooks";
+import useGoogleLogoutHooks from "../hooks/useGoogleLogoutHook";
 import useStateContext from "../hooks/useStateContext";
 
 export default function Layout() {
