@@ -1,6 +1,9 @@
-import React from "react";
+import { gapi } from "gapi-script";
+import React, { useEffect } from "react";
 import GoogleLogin, { useGoogleLogin } from "react-google-login";
 import { useNavigate } from "react-router-dom";
+import { createAPIEndpoint, ENDPOINTS } from "../api";
+import useStateContext from "../hooks/useStateContext";
 import { refreshTokenSetup } from "../utils/refreshToken";
 
 const clientId =
@@ -8,11 +11,30 @@ const clientId =
 
 const GoogleLogInButton = () => {
   const navigate = useNavigate();
+  const { context, setContext } = useStateContext();
+
+  useEffect(() => {
+    const initClient = () => {
+      gapi.client.init({
+        clientId: clientId,
+        scope: "",
+      });
+    };
+    gapi.load("client:auth2", initClient);
+  });
 
   const onSuccess = (res: any) => {
-    console.log("Login success: currentUse", res.profileObj);
-    navigate("/quiz");
-    // refreshTokenSetup(res);
+    const googleAccountDetails = {
+      name: res.profileObj.name,
+      email: res.profileObj.email,
+    };
+    createAPIEndpoint(ENDPOINTS.participant)
+      .post(googleAccountDetails)
+      .then((res) => {
+        setContext({ ...context, participantId: res.data.id });
+        navigate("/quiz");
+      })
+      .catch((err) => console.log(err));
   };
 
   const onFailure = (res: any) => {

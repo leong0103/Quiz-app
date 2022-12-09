@@ -33,42 +33,6 @@ export default function Login() {
     getFreshModel,
   });
 
-  const clientId =
-    "982099827840-dgf14s3u4u9dkon3idokciabcfqbkoma.apps.googleusercontent.com";
-
-  useEffect(() => {
-    const initClient = () => {
-      gapi.client.init({
-        clientId: clientId,
-        scope: "",
-      });
-    };
-    gapi.load("client:auth2", initClient);
-  });
-
-  const onSuccess = (res: any) => {
-    // console.log("success:", res);
-    console.log(res.profileObj.name);
-    console.log(res.profileObj.email);
-    const googleAccountDetails = {
-      name: res.profileObj.name,
-      email: res.profileObj.email,
-    };
-    // if (sessionStorage.getItem("isLoggedIn") === "true") {
-    //   console.log("sessionStorage")
-    // }
-    createAPIEndpoint(ENDPOINTS.participant)
-      .post(googleAccountDetails)
-      .then((res) => {
-        setContext({ ...context, participantId: res.data.id });
-        navigate("/quiz");
-      })
-      .catch((err) => console.log(err));
-  };
-  const onFailure = (err: any) => {
-    console.log("failed:", err);
-  };
-
   useEffect(() => {
     resetContext();
   }, []);
