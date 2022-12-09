@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./Components/Layout";
-import Login from "./Components/Login";
-import Quiz from "./Components/Quiz";
-import Result from "./Components/Result";
+import Login from "./Pages/Login";
+import Quiz from "./Pages/Quiz";
+import Result from "./Pages/Result";
 
 function App() {
   return (

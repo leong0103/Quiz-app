@@ -1,13 +1,17 @@
 import { AppBar, Button, Container, Toolbar, Typography } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
+import useGoogleLogoutHooks from "../hooks/useGoogleLogoutHooks";
+import LogoutHooks from "../hooks/useGoogleLogoutHooks";
 import useStateContext from "../hooks/useStateContext";
 
 export default function Layout() {
   const { resetContext } = useStateContext();
   const navigate = useNavigate();
+  const { signOut } = useGoogleLogoutHooks();
 
   const logout = () => {
     resetContext();
+    signOut();
     navigate("/");
   };
 

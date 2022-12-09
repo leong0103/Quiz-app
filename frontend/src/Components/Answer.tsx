@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { QuestionAnswers } from "./Result";
+import { QuestionAnswers } from "../Pages/Result";
 import ExpandCircleDownIcon from "@mui/icons-material/ExpandCircleDown";
 import { green, red, grey } from "@mui/material/colors";
 

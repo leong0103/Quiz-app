@@ -13,7 +13,7 @@ import { createAPIEndpoint, ENDPOINTS } from "../api";
 import { getFormatedTime } from "../helper";
 import useStateContext, { SelectedOption } from "../hooks/useStateContext";
 import { green } from "@mui/material/colors";
-import Answer from "./Answer";
+import Answer from "../Components/Answer";
 
 interface AnsResponse {
   questionId: number;
