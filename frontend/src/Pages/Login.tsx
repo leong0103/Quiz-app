@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
   Typography,
+  Divider,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +33,7 @@ export default function Login() {
 
   useEffect(() => {
     resetContext();
-  }, []);
+  }, [resetContext]);
 
   const validate = (): Boolean => {
     let error: Error = {};
@@ -74,7 +75,6 @@ export default function Login() {
               },
             }}
           >
-            {context.participantId}
             <form autoComplete="on" onSubmit={Login}>
               <TextField
                 label="Email"
@@ -102,7 +102,19 @@ export default function Login() {
               </Button>
             </form>
           </Box>
-          <GoogleLogInButton />
+          <Divider
+            component="li"
+            sx={{
+              borderBottomWidth: 4,
+              marginLeft: "5%",
+              marginRight: "5%",
+              listStyle: "none",
+              mt: "5%",
+            }}
+          />
+          <Box sx={{ mt: "5%" }}>
+            <GoogleLogInButton />
+          </Box>
         </CardContent>
       </Card>
     </Center>
