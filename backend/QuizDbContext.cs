@@ -5,11 +5,11 @@ namespace backend
 {
     public class QuizDbContext : DbContext
     {
-        protected readonly IConfiguration Configuration;
+        protected readonly IConfiguration _configuration;
 
         public QuizDbContext(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         public DbSet<Question> Question { get; set; }
@@ -24,8 +24,8 @@ namespace backend
             // options.UseNpgsql(Configuration.GetConnectionString("WebApiDatabase"));
 
             //For SQL Server
-            base.OnConfiguring(options);
-            options.UseSqlServer("Server=localhost;Database=quiz-app-db;User Id=SA;Password=Password1234#;TrustServerCertificate=True;");
+            // base.OnConfiguring(options);
+            options.UseSqlServer(_configuration.GetConnectionString("SQLServerDb"));
         }
 
 
