@@ -12,10 +12,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
-//For PostgreSQL
-// builder.Services.AddDbContext<QuizDbContext>(options => 
-// options.UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase")));
-
 //For SQL server
 builder.Services.AddDbContext<QuizDbContext>();
 

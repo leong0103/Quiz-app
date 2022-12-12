@@ -24,7 +24,6 @@ namespace backend
             // options.UseNpgsql(Configuration.GetConnectionString("WebApiDatabase"));
 
             //For SQL Server
-            // base.OnConfiguring(options);
             options.UseSqlServer(_configuration.GetConnectionString("SQLServerDb"));
         }
 
