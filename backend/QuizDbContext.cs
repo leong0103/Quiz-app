@@ -26,8 +26,6 @@ namespace backend
             //For SQL Server
             base.OnConfiguring(options);
             options.UseSqlServer("Server=localhost;Database=quiz-app-db;User Id=SA;Password=Password1234#;TrustServerCertificate=True;");
-            
-
         }
 
 
