@@ -10,8 +10,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<QuizDbContext>(options => 
-options.UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase")));
+//For PostgreSQL
+// builder.Services.AddDbContext<QuizDbContext>(options => 
+// options.UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase")));
+
+//For SQL server
+builder.Services.AddDbContext<QuizDbContext>();
 
 var app = builder.Build();
 
