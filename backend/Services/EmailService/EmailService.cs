@@ -5,6 +5,11 @@ using MimeKit.Text;
 
 namespace backend.Service.EmailService
 {
+    public interface IEmailService
+    {
+        void SendEmail(EmailRequest request);
+    }
+
     public class EmailService : IEmailService
     {
         private readonly IConfiguration _configuration;
@@ -20,7 +25,7 @@ namespace backend.Service.EmailService
             email.From.Add(MailboxAddress.Parse(_configuration.GetSection("EmailUserName").Value));
             email.To.Add(MailboxAddress.Parse(request.To));
             email.Subject = request.Subject;
-            email.Body = new TextPart(TextFormat.Html) {Text = request.Body};
+            email.Body = new TextPart(TextFormat.Html) { Text = request.Body };
 
             using var smtp = new SmtpClient();
             smtp.Connect(_configuration.GetSection("EmailHost").Value, 587, MailKit.Security.SecureSocketOptions.StartTls);
