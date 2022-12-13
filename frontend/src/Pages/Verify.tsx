@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createUserAPIEndpoint, USERENDPOINTS } from "../api";
 import Center from "../Components/Center";
+import Success from "./Success";
 // import useCreateUserForm from "../hooks/useCreateUserForm";
 
 interface Error {
@@ -27,10 +28,11 @@ const getFreshModel = (): VerifyField => ({
 export default function VerifyUser() {
   const [values, setValues] = useState(getFreshModel());
   const [errors, setErrors] = useState<Error>({});
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
   const navigate = useNavigate();
-  // http://localhost:3000/verify-user?email=test@gmail.com
   const queryParams = new URLSearchParams(window.location.search);
-  const email = queryParams.get('email');
+  const email = queryParams.get("email");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -55,12 +57,11 @@ export default function VerifyUser() {
       let data = {
         email: email,
         token: values.verificationToken,
-      }
+      };
       createUserAPIEndpoint(USERENDPOINTS.verify)
         .post(data)
         .then((res) => {
-          console.log(res);
-          // navigate("/");
+          setIsSuccess(true);
         })
         .catch((err) => {
           let error: Error = {};
@@ -71,11 +72,58 @@ export default function VerifyUser() {
   };
   return (
     <>
-      <Center>
+      {isSuccess ? (
+        <>
+          <Success messageToDisplay={"Verify Successfully"} />
+        </>
+      ) : (
+        <>
+          <Center>
+            <Card sx={{ width: 400 }}>
+              <CardContent sx={{ textAlign: "center" }}>
+                <Typography variant="h3" sx={{ my: 3 }}>
+                  Verify Account
+                </Typography>
+                <Box
+                  sx={{
+                    ".MuiTextField-root": {
+                      m: 1,
+                      width: "90%",
+                    },
+                  }}
+                >
+                  <form autoComplete="on" onSubmit={submitVerify}>
+                    <TextField
+                      label="Verify Code"
+                      name="verificationToken"
+                      value={values.verificationToken}
+                      onChange={handleInputChange}
+                      variant="outlined"
+                      {...(errors.verificationToken && {
+                        error: true,
+                        helperText: errors.verificationToken,
+                      })}
+                    />
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      size="large"
+                      sx={{ width: "90%" }}
+                    >
+                      Submit
+                    </Button>
+                  </form>
+                </Box>
+              </CardContent>
+            </Card>
+          </Center>
+        </>
+      )}
+      {/* <Center>
         <Card sx={{ width: 400 }}>
           <CardContent sx={{ textAlign: "center" }}>
             <Typography variant="h3" sx={{ my: 3 }}>
-              Create User
+              Verify Account
             </Typography>
             <Box
               sx={{
@@ -109,7 +157,7 @@ export default function VerifyUser() {
             </Box>
           </CardContent>
         </Card>
-      </Center>
+      </Center> */}
     </>
   );
 }
