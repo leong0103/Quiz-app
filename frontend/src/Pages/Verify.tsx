@@ -28,6 +28,9 @@ export default function VerifyUser() {
   const [values, setValues] = useState(getFreshModel());
   const [errors, setErrors] = useState<Error>({});
   const navigate = useNavigate();
+  // http://localhost:3000/verify-user?email=test@gmail.com
+  const queryParams = new URLSearchParams(window.location.search);
+  const email = queryParams.get('email');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -46,14 +49,18 @@ export default function VerifyUser() {
     return Object.values(error).every((item) => item === "");
   };
 
-  const createUser = (e: React.FormEvent) => {
+  const submitVerify = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
+      let data = {
+        email: email,
+        token: values.verificationToken,
+      }
       createUserAPIEndpoint(USERENDPOINTS.verify)
-        .postByParams("token", values.verificationToken)
+        .post(data)
         .then((res) => {
-          // console.log(res);
-          navigate("/");
+          console.log(res);
+          // navigate("/");
         })
         .catch((err) => {
           let error: Error = {};
@@ -78,7 +85,7 @@ export default function VerifyUser() {
                 },
               }}
             >
-              <form autoComplete="on" onSubmit={createUser}>
+              <form autoComplete="on" onSubmit={submitVerify}>
                 <TextField
                   label="Verify Code"
                   name="verificationToken"

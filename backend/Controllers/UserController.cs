@@ -72,11 +72,11 @@ public class UserController : ControllerBase
 
     //POST: api/user/verify
     [HttpPost("verify")]
-    public async Task<IActionResult> Verify(string token)
+    public async Task<IActionResult> Verify(UserVerifyRequest request)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(user => user.VerificationToken == token);
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.Email == request.Email);
 
-        if(user == null)
+        if(user == null || user.VerificationToken != request.Token)
         {
             return BadRequest("Invalid token");
         }
