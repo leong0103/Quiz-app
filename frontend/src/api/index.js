@@ -31,5 +31,6 @@ export const createUserAPIEndpoint = endpoint => {
   let url = BASE_URL + "api/User/" + endpoint;
   return {
     post: data => axios.post(url, data),
+    postByParams: (dataName, dataValue) => axios.post(url + `?${dataName}=${dataValue}`),
   }
 }

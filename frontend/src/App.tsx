@@ -4,6 +4,7 @@ import CreateUser from "./Pages/CreateUser";
 import Login from "./Pages/Login";
 import Quiz from "./Pages/Quiz";
 import Result from "./Pages/Result";
+import VerifyUser from "./Pages/Verify";
 
 function App() {
   return (
@@ -11,6 +12,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/create-user" element={<CreateUser />} />
+        <Route path="/verify-user" element={<VerifyUser />} />
+
         <Route path="/" element={<Layout />}>
           <Route path="/quiz" element={<Quiz />} />
           <Route path="/result" element={<Result />} />
