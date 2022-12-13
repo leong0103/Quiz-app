@@ -43,6 +43,14 @@ public class UserController : ControllerBase
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
+        string UrlInEmail = $"http://localhost:3000/verify-user?email={user.Email}";
+        EmailRequest emailRequest = new EmailRequest();
+        emailRequest.To = $"{user.Email}";
+        emailRequest.Subject = "Verify your account";
+        emailRequest.Body = 
+            $"<h3>Please click following Verify link to verify your account</h3> <a href={UrlInEmail}>Verify link</a> <p>Verify code: {user.VerificationToken}</p>";
+        _emailService.SendEmail(emailRequest);
+
         return Ok(user.Email);
     }
 
