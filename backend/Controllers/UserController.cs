@@ -3,6 +3,7 @@ using backend.Models;
 using Microsoft.EntityFrameworkCore;
 using backend.Models.Request;
 using System.Security.Cryptography;
+using backend.Service.EmailService;
 
 namespace backend.Controllers;
 
@@ -11,10 +12,13 @@ namespace backend.Controllers;
 public class UserController : ControllerBase
 {
     private readonly QuizDbContext _context;
+    private readonly IEmailService _emailService;
 
-    public UserController(QuizDbContext contect)
+    public UserController(QuizDbContext contect, IEmailService emailService)
     {
         _context = contect;
+        _emailService = emailService;
+
     }
 
     //POST: api/user/register
@@ -46,7 +50,7 @@ public class UserController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(UserLoginRequest request)
     {
-        User user = await _context.Users.FirstOrDefaultAsync(user => user.Email == request.Email);
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.Email == request.Email);
 
         if (user == null)
         {
@@ -70,7 +74,7 @@ public class UserController : ControllerBase
     [HttpPost("verify")]
     public async Task<IActionResult> Verify(string token)
     {
-        User user = await _context.Users.FirstOrDefaultAsync(user => user.VerificationToken == token);
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.VerificationToken == token);
 
         if(user == null)
         {
@@ -87,7 +91,7 @@ public class UserController : ControllerBase
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword(string email)
     {
-        User user = await _context.Users.FirstOrDefaultAsync(user => user.Email == email);
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.Email == email);
 
         if(user == null)
         {
@@ -98,6 +102,12 @@ public class UserController : ControllerBase
         user.ResetTokenExpires = DateTime.Now.AddDays(1);
         await _context.SaveChangesAsync();
 
+        EmailRequest emailRequest = new EmailRequest();
+        emailRequest.To = "dell.luettgen62@ethereal.email";
+        emailRequest.Subject = "Reset password";
+        emailRequest.Body = $"<h3>Please copy following Verify code to website</h3><p>Verify code: {user.PasswordResetToken}</p>";
+        _emailService.SendEmail(emailRequest);
+
         return Ok("You may now reset your password.");
     }
 
@@ -105,7 +115,7 @@ public class UserController : ControllerBase
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
     {
-        User user = await _context.Users.FirstOrDefaultAsync(user => user.PasswordResetToken == request.Token);
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.PasswordResetToken == request.Token);
         if(user == null || user.ResetTokenExpires < DateTime.Now)
         {
             return BadRequest("Invalid Token");
@@ -143,6 +153,8 @@ public class UserController : ControllerBase
 
     private string CreateRandomToken()
     {
-        return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+        Random generator = new Random();
+        return generator.Next(100000, 1000000).ToString("D6");
+        // return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
     }
 }
