@@ -4,7 +4,7 @@ import CreateUser from "./Pages/CreateUser";
 import Login from "./Pages/Login";
 import Quiz from "./Pages/Quiz";
 import Result from "./Pages/Result";
-import Success from "./Pages/Success";
+// import Success from "./Pages/Success";
 import VerifyUser from "./Pages/Verify";
 
 function App() {

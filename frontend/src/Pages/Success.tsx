@@ -20,7 +20,7 @@ export default function Success({messageToDisplay}: SuccessProp) {
             {messageToDisplay}
           </Typography>
         <Button
-                type="submit"
+                type="button"
                 variant="contained"
                 size="small"
                 sx={{ width: "30%" }}

@@ -115,6 +115,34 @@ export default function Login() {
           <Box sx={{ mt: "5%" }}>
             <GoogleLogInButton />
           </Box>
+          <Divider
+            component="li"
+            sx={{
+              borderBottomWidth: 4,
+              marginLeft: "5%",
+              marginRight: "5%",
+              listStyle: "none",
+              mt: "5%",
+            }}
+          />
+          <Button
+            type="button"
+            variant="contained"
+            size="large"
+            onClick={() => navigate("/")}
+            sx={{ mt: "5%", width: "90%" }}
+          >
+            Admin login
+          </Button>
+          <Button
+            type="button"
+            variant="contained"
+            size="large"
+            onClick={() => navigate("/create-user")}
+            sx={{ mt: "5%", width: "90%" }}
+          >
+            Create new admin account
+          </Button>
         </CardContent>
       </Card>
     </Center>

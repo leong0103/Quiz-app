@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import { createUserAPIEndpoint, USERENDPOINTS } from "../api";
 import Center from "../Components/Center";
 import Success from "./Success";
-// import useCreateUserForm from "../hooks/useCreateUserForm";
 
 interface Error {
   [key: string]: string;
@@ -81,7 +80,7 @@ export default function VerifyUser() {
           <Center>
             <Card sx={{ width: 400 }}>
               <CardContent sx={{ textAlign: "center" }}>
-                <Typography variant="h3" sx={{ my: 3 }}>
+                <Typography variant="h4" sx={{ my: 3 }}>
                   Verify Account
                 </Typography>
                 <Box
@@ -119,45 +118,6 @@ export default function VerifyUser() {
           </Center>
         </>
       )}
-      {/* <Center>
-        <Card sx={{ width: 400 }}>
-          <CardContent sx={{ textAlign: "center" }}>
-            <Typography variant="h3" sx={{ my: 3 }}>
-              Verify Account
-            </Typography>
-            <Box
-              sx={{
-                ".MuiTextField-root": {
-                  m: 1,
-                  width: "90%",
-                },
-              }}
-            >
-              <form autoComplete="on" onSubmit={submitVerify}>
-                <TextField
-                  label="Verify Code"
-                  name="verificationToken"
-                  value={values.verificationToken}
-                  onChange={handleInputChange}
-                  variant="outlined"
-                  {...(errors.verificationToken && {
-                    error: true,
-                    helperText: errors.verificationToken,
-                  })}
-                />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  sx={{ width: "90%" }}
-                >
-                  Submit
-                </Button>
-              </form>
-            </Box>
-          </CardContent>
-        </Card>
-      </Center> */}
     </>
   );
 }

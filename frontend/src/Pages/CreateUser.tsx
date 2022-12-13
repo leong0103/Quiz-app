@@ -59,9 +59,7 @@ export default function CreateUser() {
       createUserAPIEndpoint(USERENDPOINTS.register)
         .post(values)
         .then((res) => {
-          console.log(res);
           setIsSuccess(true);
-          // navigate("/quiz");
         })
         .catch((err) => console.log(err));
     }
@@ -81,7 +79,7 @@ export default function CreateUser() {
           <Center>
             <Card sx={{ width: 400 }}>
               <CardContent sx={{ textAlign: "center" }}>
-                <Typography variant="h3" sx={{ my: 3 }}>
+                <Typography variant="h4" sx={{ my: 3 }}>
                   Create User
                 </Typography>
                 <Box
@@ -130,7 +128,7 @@ export default function CreateUser() {
                       type="submit"
                       variant="contained"
                       size="large"
-                      sx={{ width: "90%" }}
+                      sx={{ mt:"2%" ,width: "90%" }}
                     >
                       Submit
                     </Button>
@@ -141,64 +139,6 @@ export default function CreateUser() {
           </Center>
         </>
       )}
-      {/* <Center>
-        <Card sx={{ width: 400 }}>
-          <CardContent sx={{ textAlign: "center" }}>
-            <Typography variant="h3" sx={{ my: 3 }}>
-              Create User
-            </Typography>
-            <Box
-              sx={{
-                ".MuiTextField-root": {
-                  m: 1,
-                  width: "90%",
-                },
-              }}
-            >
-              <form autoComplete="on" onSubmit={createUser}>
-                <TextField
-                  label="Email"
-                  name="email"
-                  value={values.email}
-                  onChange={handleInputChange}
-                  variant="outlined"
-                  {...(errors.email && {
-                    error: true,
-                    helperText: errors.email,
-                  })}
-                />
-                <TextField
-                  label="Password"
-                  name="password"
-                  value={values.password}
-                  onChange={handleInputChange}
-                  variant="outlined"
-                  {...(errors.password && { error: true, helperText: errors.password })}
-                />
-                <TextField
-                  label="Confirmed Password"
-                  name="confirmPassword"
-                  value={values.confirmPassword}
-                  onChange={handleInputChange}
-                  variant="outlined"
-                  {...(errors.confirmPassword && {
-                    error: true,
-                    helperText: errors.confirmPassword,
-                  })}
-                />
-                <Button
-                  type="submit"
-                  variant="contained"
-                  size="large"
-                  sx={{ width: "90%" }}
-                >
-                  Submit
-                </Button>
-              </form>
-            </Box>
-          </CardContent>
-        </Card>
-      </Center> */}
     </>
   );
 }
