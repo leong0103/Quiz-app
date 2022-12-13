@@ -12,6 +12,7 @@ interface ContextProviderProp {
 }
 
 interface ContextItem {
+  name: string;
   participantId: number;
   timeTaken: number;
   selectedOptions: SelectedOption[];
@@ -29,6 +30,7 @@ export interface SelectedOption {
 
 const defaultValue: ContextValue = {
   context: {
+    name: "",
     timeTaken: 0,
     selectedOptions: new Array<SelectedOption>(),
     participantId: 0,

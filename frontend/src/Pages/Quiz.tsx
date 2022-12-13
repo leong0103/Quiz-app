@@ -86,6 +86,9 @@ export default function Quiz() {
     <>
       {question.length !== 0 ? (
         <Card sx={{ maxWidth: 640, mx: "auto", mt: 10 }}>
+          <Typography variant="h6">
+            {context.name + " game"}
+          </Typography>
           <CardHeader
             title={"Question " + (questionIndex + 1) + " of 5"}
             action={<Typography>{getFormatedTime(timeTaken)}</Typography>}

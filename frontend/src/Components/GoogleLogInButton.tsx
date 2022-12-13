@@ -30,7 +30,11 @@ const GoogleLogInButton = () => {
     createAPIEndpoint(ENDPOINTS.participant)
       .post(googleAccountDetails)
       .then((res) => {
-        setContext({ ...context, participantId: res.data.id });
+        setContext({
+          ...context,
+          participantId: res.data.id,
+          name: googleAccountDetails.name,
+        });
         navigate("/quiz");
       })
       .catch((err) => console.log(err));
