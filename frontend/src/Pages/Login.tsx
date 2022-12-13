@@ -10,10 +10,11 @@ import {
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createAPIEndpoint, ENDPOINTS } from "../api";
-import useForm from "../hooks/useForm";
+import useForm from "../hooks/useLoginForm";
 import useStateContext from "../hooks/useStateContext";
 import Center from "../Components/Center";
 import GoogleLogInButton from "../Components/GoogleLogInButton";
+import useLoginForm from "../hooks/useLoginForm";
 
 interface Error {
   [key: string]: string;
@@ -27,7 +28,7 @@ const getFreshModel = () => ({
 export default function Login() {
   const { context, setContext, resetContext } = useStateContext();
   const navigate = useNavigate();
-  const { values, errors, setErrors, handleInputChange } = useForm({
+  const { values, errors, setErrors, handleInputChange } = useLoginForm({
     getFreshModel,
   });
 

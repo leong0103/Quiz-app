@@ -2,17 +2,19 @@ import { useState } from "react";
 
 interface IGetFreshModelObject {
   getFreshModel: () => {
-    name: string;
     email: string;
+    password: string;
+    confirmPassword: string;
   };
 }
 
 interface ErrorProp {
-  name?: string;
-  email?: string;
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
 }
 
-export default function useForm({ getFreshModel }: IGetFreshModelObject) {
+export default function useCreateUserForm({ getFreshModel }: IGetFreshModelObject) {
   const [values, setValues] = useState(getFreshModel());
   const [errors, setErrors] = useState<ErrorProp>({});
 
